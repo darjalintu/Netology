@@ -1,22 +1,19 @@
 #!/bin/bash
-alertloadavg1=$(tail -n 24 sysinfo.log | awk '{if ($4 > 1) {print 1; exit}} END {print 0}')
-alertmem=$(tail -n 36 sysinfo.log | awk '{mem = ($5 / $6) * 100; if (mem < 60) {print 1; exit}} END {print 0}')
-alertdisk=$(tail -n 60 sysinfo.log | awk '{disk = ($7 / $8) * 100; if (disk < 60) {print 1; exit}} END {print 0}')
 alert=0
 
-if [[ $alertloadavg1 -eq 1 ]]; then
-  alert=1
-  echo "Зафиксировано в течении последних 2 минут, что loadavg1 > 1"
+if tail -n 24 sysinfo.log | awk '$4 >= 1 {alertfound = 1; exit} END {exit !alertfound}}; then
+echo "Зафиксировано в течении последних 2 минут, что loadavg1 > 1"
+alert=1
 fi
 
-if [[ $alertmem -eq 1 ]]; then
-  alert=1
-  echo "Зафиксировано в течении последних 3 минут, что свободный объем оперативной памяти < 60%"
+if tail -n 36 sysinfo.log | awk '($5 / $6) >= 0.6 {alertfound = 1; exit} END {exit !alertfound}}'; then
+echo "Зафиксировано в течении последних 3 минут, что использовано > 60% объема оперативной памяти"
+alert=1
 fi
 
-if [[ $alertdisk -eq 1 ]]; then
-  alert=1
-  echo "Зафиксировано в течении последних 5 минут, что свободный объем на диске < 60%"
+if tail -n 60 sysinfo.log | awk '($7 / $8) >= 0.6 {alertfound = 1; exit} END {exit !alertfound}}; then
+echo "Зафиксировано в течении последних 5 минут, что что использовано > 60% объема диска"
+alert=1
 fi
 
 if [[ $alert -eq 0 ]]; then
