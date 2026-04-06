@@ -35,6 +35,6 @@ scanip() {
 # Сканируем сеть
 if [[ -n "$CIDR" ]]; then
     # Сканируем подсеть
-    scanip "$IP"
+    scanip "$CIDR"
 
 fi
