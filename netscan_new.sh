@@ -21,7 +21,7 @@ if ! ip link show "$INTERFACE" &>/dev/null; then
    err "Интерфейс '$INTERFACE' не существует. Введите корректное значение."
 fi
 
-# Получаем первую IPv4-запись в формате CIDR
+# Получаем IPv4-запись в формате CIDR
 CIDR=$(ip -4 addr show dev "$INTERFACE" | awk '/inet/ {print $2; exit}')
 if [[ -z "$CIDR" ]]; then
     err "На интерфейсе '$INTERFACE' не найдено IPv4-адреса."
