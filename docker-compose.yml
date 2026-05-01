@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  sazonovads-netology-pushgateway:
+    image: prom/pushgateway:v1.6.2
+    container_name: sazonovads-netology-pushgateway
+    ports:
+      - 9091:9091
+    networks:
+      - sazonovads-my-netology-hw
+    restart: unless-stopped
+
+  sazonovads-netology-prometheus:
+    image: prom/prometheus:v2.47.2
+    container_name: sazonovads-netology-prometheus
+    command: --config.file=/etc/prometheus/prometheus.yml --web.enable-lifecycle
+    ports:
+      - 9090:9090
+    volumes:
+      - ./prometheus:/etc/prometheus/
+      - prometheus_data:/prometheus
+    networks:
+      - sazonovads-my-netology-hw
+    depends_on:
+      - sazonovads-netology-pushgateway
+    restart: always
+  sazonovads-netology-grafana:
+    image: grafana/grafana
+    container_name: sazonovads-netology-grafana
+    ports:
+      - 80:3000
+    volumes:
+      - ./grafana:/etc/grafana
+      - grafana-data:/var/lib/grafana
+    environment:
+      - GF_PATHS_CONFIG=/etc/grafana/grafana.ini
+      - GF_PATHS_CUSTOM_CONFIG=/etc/grafana/custom.ini
+    networks:
+      - sazonovads-my-netology-hw
+    depends_on:
+      - sazonovads-netology-prometheus
+    restart: unless-stopped
+
+volumes:
+  prometheus_data:
+  grafana-data:
+
+networks:
+  sazonovads-my-netology-hw:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.5.0.0/16
