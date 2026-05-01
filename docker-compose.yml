@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  # Здесь будут описания сервисов
+
+volumes:
+  # Здесь будут объявлены именованные тома
+
+networks:
+  sazonovads-my-netology-hw:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.5.0.0/16
