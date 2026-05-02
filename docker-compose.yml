@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   sazonovads-netology-pushgateway:
     image: prom/pushgateway:v1.6.2
@@ -17,7 +15,7 @@ services:
     ports:
       - 9090:9090
     volumes:
-      - ./prometheus:/etc/prometheus/
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - prometheus_data:/prometheus
     networks:
       - sazonovads-my-netology-hw
@@ -30,7 +28,8 @@ services:
     ports:
       - 80:3000
     volumes:
-      - ./grafana:/etc/grafana
+      - ./grafana.ini:/etc/grafana/grafana.ini:ro
+      - ./custom.ini:/etc/grafana/custom.ini:ro
       - grafana-data:/var/lib/grafana
     environment:
       - GF_PATHS_CONFIG=/etc/grafana/grafana.ini
