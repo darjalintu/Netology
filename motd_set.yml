@@ -1,0 +1,13 @@
+- name: Set custom MOTD
+  hosts: all
+  become: yes
+  vars:
+    custom_motd: ">>> Добро пожаловать на {{ ansible_hostname }} | Ansible Managed <<<\n"
+  tasks:
+    - name: Apply MOTD
+      ansible.builtin.copy:
+        content: "{{ custom_motd }}"
+        dest: /etc/motd
+        owner: root
+        group: root
+        mode: '0644'
