@@ -1,0 +1,5 @@
+- name: Развёртывание Apache через роль
+  hosts: all
+  become: yes
+  roles:
+    - my_apache_role
