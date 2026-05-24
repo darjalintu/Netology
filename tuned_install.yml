@@ -1,0 +1,14 @@
+- name: Install and enable tuned daemon
+  hosts: all
+  become: yes
+  tasks:
+    - name: Install tuned from standard OS repository
+      ansible.builtin.package:
+        name: tuned
+        state: present
+
+    - name: Start tuned service and enable on boot
+      ansible.builtin.service:
+        name: tuned
+        state: started
+        enabled: yes
