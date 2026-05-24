@@ -1,0 +1,16 @@
+- name: Set dynamic MOTD with host info and greeting
+  hosts: all
+  become: yes
+  gather_facts: yes
+
+  tasks:
+    - name: Apply custom MOTD
+      ansible.builtin.copy:
+        content: |
+          Hostname: {{ ansible_hostname }}
+          IP Address: {{ ansible_default_ipv4.address | default('N/A') }}
+          Хорошего дня! Да прибудет с тобой сила, сисадмин!
+        dest: /etc/motd
+        owner: root
+        group: root
+        mode: '0644'
